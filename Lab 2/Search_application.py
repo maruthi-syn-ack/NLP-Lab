@@ -1,9 +1,7 @@
-# Accept text file as input corpuses 
+# Author : MARUTHI R (github.com/maruthi-syn-ack)
+# Required Libraries
 import os
 import re 
-os.getcwd()
-#os.mkdir("Lab1")
-#os.chdir("Lab1")
 def intial_setup():
     folder_name=input("Enter a folder name")
     os.mkdir(folder_name)
@@ -19,15 +17,25 @@ def intial_setup():
         f.write(Contents)
         f.close
     return Corpuse
-  def search(Corpuse):
+
+def highlight(match):
+    return f'\033[91;1m{match.group()}\033[0m'
+
+def search(Corpuse):
     regex = str(input("Enter a regular Expression to search "))
-    # regex = re.compile(regex)
-    # inargass 'str'> <class 'str'>
+    regex = re.compile(regex)
     for file,contents in Corpuse.items():
         txt = str(contents)
         res = re.search(regex,contents)
         if res!= None:
-            # print("Found patren {}  as {}  in ' {} ' ".format(regex,highlight_one(contents,res.group()),file
-            print("Found patren {}  as {}  in ' {} ' ".format(regex,res.group(),file))
+            mod_str = re.sub(res.group(),highlight(res),res.string) # modifiy the string to highlight the pattren
+            print("Found patren {}  as {}  in ' {} ' ".format(regex,mod_str,file))
         else:
             print("No pattren found in '{}' ".format(file))
+
+def main():
+    Corpuse = intial_setup()
+    search(Corpuse)
+
+if __name__ == "__main__":
+    main()
