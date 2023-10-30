@@ -30,38 +30,20 @@ def Set_states():
         nfa['transitions'][state][symbol] = to_states
     # Input initial state
     start_state = input("Enter initial state: ")
-    self.nfa['start_state'] = start_state
+    nfa['start_state'] = start_state
     # Input accepting states
     accept_states_input = input("Enter accepting states (comma-separated): ")
-    self.nfa['accept_states'] = set(accept_states_input.split(','))
+    nfa['accept_states'] = set(accept_states_input.split(','))
     return nfa
     
-def Process_NFA_dfs(nfa,Input_string):
-    """
-    Run the NFA on the given input string and check if it's accepted or not using DFS
-    """
-    current_states = {nfa['initial_state']}
-    print(f"Start state: {current_states}")
-    for symbol in Input_string:
-        if symbol not in nfa['alphabet']:
-            print(f"Invalid symbol: {symbol}")
-    return False # Invalid symbol
-    
-    next_states = set()
-    for state in current_states:
-        next_states.update(nfa['transitions'][state].get(symbol,set()))
-    if not next_states:
-        print(f"No transition from states {current_states} with symbol {symbol}")
-    return False
-    print(f"Transition from states {current_states} to states {next_states} with symbol {symbol}")
-    current_states = next_states
-    return any(state in nfa['accept_states'] for state in current_states)
 def Process_NFA_bfs(nfa, input_string):
     
+
+    from collections import deque 
     """
     Run the NFA on the given input string and check if it's accepted or not using BFS.
     """
-    current_states = {nfa['initial_state']}
+    current_states = {nfa['start_state']}
     queue = deque()
     queue.append(current_states)
     
@@ -81,7 +63,9 @@ def Process_NFA_bfs(nfa, input_string):
             print(f"No transition from states {current_states} with symbol {symbol}")
             return False
 
+        print("--------------------------------------------------------------------------------------")
         print(f"Transition from states {current_states} to states {next_states} with symbol {symbol}")
+        print("--------------------------------------------------------------------------------------")
         
         queue.append(next_states)
         current_states = next_states
@@ -92,25 +76,28 @@ def Process_NFA_bfs(nfa, input_string):
 
     return any(state in nfa['accept_states'] for state in current_states)
 
-if __name__ == "__main__":
-   
-    nfa = Set_states()
-    
-    # Input the string
-    input_string = input("Enter a string (0s and 1s only): ")
 
-    # Check the validity
-    print("String Validatin by NFA using BFS.")
-    
-    if Process_NFA_bfs(nfa, input_string):
-        print("String is valid and accepted by the NFA.")
-    else:
-        print("String is invalid and not accepted by the NFA.")
-    
-    print("String Validatin by NFA using DFS.")
-    
-    if Process_NFA_dfs(nfa, input_string):
-        print("String is valid and accepted by the NFA.")
-    else:
-        print("String is invalid and not accepted by the NFA.")
-    
+if __name__ == "__main__":
+    ch=0
+    while ch!=3: 
+        print("-----------------------------------------------------------------------------------------")
+        print(" 1.Create a new NFA state Instance \n 2. Validate Strings With already created NFA \n 3. Exit()")
+        print("\n\n")
+        ch = int(input())
+        if(ch == 1):
+            ch=0
+            nfa = Set_states()
+        elif(ch == 2):
+            ch=0
+            # Input the string
+            input_string = input("Enter a string (0s and 1s only): ")
+        
+            # Check the validity
+            print("String Validatin by NFA using BFS.")
+            
+            if Process_NFA_bfs(nfa, input_string):
+                print("String is valid and accepted by the NFA.")
+            else:
+                print("String is invalid and not accepted by the NFA.")
+            
+    print("Exiting Program")
